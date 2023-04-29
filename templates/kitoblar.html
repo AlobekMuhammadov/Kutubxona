@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitoblar</title>
+</head>
+<body>
+      <h1>Bizdagi kitoblar</h1>
+      <hr>
+      <br>
+      <br>
+      <form method="get">
+        <input type="text" name="qidiruv">
+        <button>qidirish</button>
+      </form>
+      <ul>
+        {%for i in kitoblar%}
+        <li>
+            {{i}}({{i.muallif}})
+        </li>
+          <a href="/kitob_ochir/{{i.id}}/"><button>O'chirish</button></a>
+          {%endfor%}
+      </ul>
+</body>
+</html>

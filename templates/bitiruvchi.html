@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bitiruvchi</title>
+</head>
+<body>
+    <h1>Bitiruvchi Talabalar</h1>
+    <hr>
+    <br>
+    <br>
+    <h1>Talabalar ro'yhati</h1>
+    <ul>
+        {%for i in bitiruvchi %}
+      <li>{{i}}({{i.kitob_soni}}-kitob soni)</li>
+        {%endfor%}
+    </ul>
+</body>
+</html>
