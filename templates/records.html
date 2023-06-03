@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Records</title>
+</head>
+<body>
+      <h2>!Bizdagi recordlar!</h2>
+      <br>
+      <br>
+      <hr>
+      <form method="get">
+        <input type="text" name="qidiruv">
+        <button>qidirish</button>
+      </form>
+      <hr>
+      <ul>
+        {% for i in recordlar %}
+        <li>
+            {{i.talaba.ism}}
+        </li>
+          <a href="/record_ochir/{{i.id}}/"><button>ochirish</button></a>
+          {%endfor%}
+      </ul>
+      <form method="post">{% csrf_token %}
+            <input type="date" name="q_s">
+            <input type="date" name="o_s">
+          <select name="t">
+              {% for i in talabalar %}
+              <option value="{{i.id}}">{{i.ism}}</option>
+              {%endfor%}
+          </select>
+          <select name="k">
+              {% for i in kitoblar %}
+              <option value="{{i.id}}">{{i.nom}}</option>
+              {%endfor%}
+          </select>
+          <select name="a">
+              {%for i in adminlar%}
+              <option value="{{i.id}}">{{i.ism}}</option>
+              {%endfor%}
+          </select>
+          <select name="q_q">
+              <option value="True">True</option>
+              <option value="False">False</option>
+          </select>
+            <button type="submit">qoshish</button>
+      </form>
+</body>
+</html>

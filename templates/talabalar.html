@@ -18,7 +18,17 @@
         {%for student in students %}
     <li>{{student.id}}.{{student}}({{student.kurs}}-kurs)</li>
         <a href="/talaba_ochir/{{student.id}}/"><button>O'chirish</button></a>
+        <a href="/talaba_tahrir/{{student.id}}/"><button>Tahrirlash</button></a>
         {%endfor%}
     </ul>
+    <br>
+    <br>
+    <form method="post">{% csrf_token %}
+        {{forma}}
+<!--        <input type="text" name="i" placeholder="Ism">-->
+<!--        <input type="number" name="k" placeholder="Kursi">-->
+<!--        <input type="number" name="k_s" placeholder="Kitob soni">-->
+        <button  type="submit" >qoshish</button>
+    </form>
 </body>
 </html>

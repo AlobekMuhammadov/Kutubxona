@@ -8,13 +8,22 @@
       <h1>Bizdagi Mualliflar</h1>
       <hr>
       <br>
+      <form method="get">
+          <input type="text" name="qidiruv">
+          <button>qidir</button>
+      </form>
       <br>
       <ul>
         {% for i in mualliflar %}
         <li>
           {{i}}
         </li>
+          <a href="/muallif_ochir/{{i.id}}/"><button>Ochirish</button></a>
         {%endfor%}
       </ul>
+      <form method="post">{% csrf_token %}
+          {{forma}}
+          <button type="submit">qoshish</button>
+      </form>
 </body>
 </html>

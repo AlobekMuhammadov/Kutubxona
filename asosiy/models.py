@@ -40,6 +40,9 @@ class Record(models.Model):
     qaytarish_sana = models.DateField()
     qaytgan_qaytmagan = models.BooleanField()
 
+    def __str__(self):
+        return self.talaba.ism
+
 
 
 

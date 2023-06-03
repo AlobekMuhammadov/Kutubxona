@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Talaba</title>
+</head>
+<body>
+<form method="POST">{% csrf_token %}
+  <label>kurs:</label>
+  <input name="kurs" value="{{talaba.kurs}}">
+  <label>kitob_soni:</label>
+  <input name="kitob_soni" placeholder="kursi"  value="{{talaba.kitob_soni}}">
+  <button type="submit">Yangilash</button>
+</form>
+
+</body>
+</html>

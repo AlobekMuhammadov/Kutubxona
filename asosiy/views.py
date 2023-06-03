@@ -1,98 +1,70 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import *
+from .forms import *
 
-# def salomlash(request):
-#     return HttpResponse("<h1>salom, dunyo!</h1>")
-# def bosh_sahifa(request):
-#     return render(request,'Kutubxona.html')
-# def mashq_uchun(requests):
-#     content = {
-#         "kitoblar":["Ufq","qorqma","Otkan kunlar", "odamiylik mulki"],
-#         "ism":"Abdulhamid"
-#
-#     }
-#     return render (requests,'mashq.html',content)
-#
-def talabalar(requests):
-    soz = requests.GET.get("qidiruv")
+
+def adminlar(request):
+    if request.method == 'POST':
+        f = AdminForms(request.POST)
+        if f.is_valid():
+            Admin.objects.create(
+                ism=f.cleaned_data['ism'],
+                ish_vaqti=f.cleaned_data.get('i_v')
+            )
+        return redirect('/adminlar/')
+    content={
+        "adminlar":Admin.objects.all(),
+        "forma": AdminForms()
+    }
+    return render(request,'admins.html',content)
+
+
+def talabalar(request):
+    if request.method == 'POST':
+        f = TalabaForm(request.POST)
+        if f.is_valid():
+            Talaba.objects.create(
+                ism = f.cleaned_data.get('ism'),
+                kurs = f.cleaned_data.get('kursi'),
+                kitob_soni = f.cleaned_data.get('k_s')
+        )
+        return redirect('/talabalar/')
+
+
+    soz = request.GET.get("qidiruv")
     if soz == "" or soz is None:
         content = {
-            "students":Talaba.objects.all()
+            "students":Talaba.objects.all(),
+            'forma':TalabaForm()
         }
     else:
         content = {
-            "students":Talaba.objects.filter(ism__icontains=soz)
+            "students":Talaba.objects.filter(ism__icontains=soz),
+            'forma': TalabaForm()
         }
-    return render(requests,'talabalar.html', content)
-#
-# def bitiruvchi(requests):
-#     content = {
-#         "bitiruvchi":Talaba.objects.filter(kurs=4)
-#     }
-#     return render(requests,'bitiruvchi.html',content)
-#
-#
-# def kitobxon(requests):
-#     content = {
-#         "kitobxon":Talaba.objects.filter(kitob_soni__gt=0)
-#     }
-#     return render(requests,'kitobxonlar.html',content)
-#
-# def bitta_talaba(requets, son):
-#     content = {
-#         "talaba":Talaba.objects.get(id=son)
-#
-#     }
-#     return render(requets, 'bitta_talaba.html', content)
-#
-# def ismi_a(requests):
-#     content = {
-#         "talaba":Talaba.objects.filter(ism__icontains='a')
-#     }
-#     return render(requests,'ism_a.html',content)
-#
-#
-# def bitta_record(requets, son):
-#     content = {
-#         "record":Record.objects.get(id=son)
-#
-#     }
-#     return render(requets, 'bitta_record.html', content)
+    return render(request,'talabalar.html', content)
 
 
-def hamma_talaba(requests):
-    content = {
-        "talabalar":Talaba.objects.all()
-    }
-    return render(requests,'talabalar.html',content)
 
-
-def bitiruvchilar(requests):
-    content = {
-        "bitiruvchilar":Talaba.objects.filter(kurs__gt=3)
-    }
-    return render(requests, 'bitiruvchilar',content)
-
-def kitobxon(requests):
-    content = {
-        "kitobxon":Talaba.objects.filter(kitob_soni__gt=0)
-    }
-    return render(requests,'kitobxonlar.html',content)
-
-
-def ismi_a(requests):
-    content = {
-        "talaba":Talaba.objects.filter(ism__icontains='a')
-    }
-    return render(requests,'ism_a.html',content)
 
 
 def bitta_talaba(requets, son):
     content = {
         "talaba":Talaba.objects.get(id=son)
+
     }
     return render(requets, 'bitta_talaba.html', content)
+
+
+
+def bitta_record(requets, son):
+    content = {
+        "record":Record.objects.get(id=son)
+
+    }
+    return render(requets, 'bitta_record.html', content)
+
 
 
 
@@ -102,24 +74,53 @@ def talaba_ochir(requests,son):
     return redirect('/talabalar/')
 
 
-def kitoblar(requests):
-    soz = requests.GET.get("qidiruv")
-    if soz == "" or soz is None:
-        content={
-            "kitoblar":Kitob.objects.all()
-        }
+
+
+
+
+def mualliflar(request):
+    if request.method == 'POST':
+        f = MuallifForm(request.POST)
+        if f.is_valid:
+            Mualllif.objects.create(
+                ism = f.cleaned_data.get('ism'),
+                kitob_soni = f.cleaned_data.get('kitob_soni'),
+                jins = f.cleaned_data.get('jins'),
+                tirik=f.cleaned_data.get('tirik'),
+                tugilgan_yil = f.cleaned_data.get('tugilgan_yil'),
+            )
+        return redirect('/mualliflar/')
+    soz = request.GET.get('qidiruv')
+    if soz =='' or soz is None:
+        content = {
+            "mualliflar":Mualllif.objects.all(),
+            'forma':MuallifForm
+    }
+
     else:
         content = {
-            "kitoblar":Kitob.objects.filter(nom__icontains=soz)
+            "mualliflar": Mualllif.objects.filter(ism__contains=soz),
+            'forma':MuallifForm
         }
-    return render(requests, 'kitoblar.html',content)
+
+    return render(request,"muallif.html",content)
+
+def muallif_ochir(request,son):
+    Mualllif.objects.filter(id=son).delete()
+    return redirect('/mualliflar/')
 
 
-# def kitobilar(requests):
-#     content = {
-#         "kitoblar":Kitob.objects.all()
-#     }
-#     return render(requests,'kitoblar.html',content)
+
+
+def muallif_id(requests,son):
+    content = {
+        "muallif":Mualllif.objects.filter(son=id)
+    }
+    return render(requests,'muallif.html',content)
+#
+    path('muallif/<int:son>/', muallif_id),
+
+
 
 
 
@@ -128,53 +129,112 @@ def kitob_ochir(requests,son):
     return redirect('/kitoblar/')
 
 
-# def kitobilar(requests,son):
-#     content = {
-#         "kitob":Kitob.objects.get(son=id)
-#     }
-#     return render(requests,"kitoblar.html",content)
-# ######
-#     path('kitoblar/<int:son>/', kitobilar),
+
+def record_ochir(request, son):
+    Record.objects.filter(id=son).delete()
+    return redirect('/recordlar/')
 
 
 
-# def recordlar(requests):
-#     content = {
-#         "recordlar":Record.objects.all()
-#     }
-#     return render(requests,'records/html',content)
-# #########
-#     path ('records/', recordlar),
+def kitoblar(request):
+    soz = request.GET.get("qidiruv")
+    if request.method == 'POST':
+        f = KitobForm(request.POST)
+        if f.is_valid():
+            f.save()
+        # Kitob.objects.create(
+        #     nom = request.POST.get('nom'),
+        #     janr = request.POST.get('janr'),
+        #     sahifa = request.POST.get('sahifa'),
+        #     muallif = Mualllif.objects.get(id=request.POST.get('m'))
+        # )
+        return redirect('/kitoblar')
+
+    if soz == "" or soz is None:
+        content={
+            "kitoblar":Kitob.objects.all(),
+            "Mualliflar": Mualllif.objects.all(),
+            "forms":KitobForm()
+        }
+    else:
+        content = {
+            "kitoblar":Kitob.objects.filter(nom__icontains=soz),
+            "Mualliflar":Mualllif.objects.all(),
+            "forms":KitobForm()
+        }
+    return render(request, 'kitoblar.html',content)
 
 
-# def tirik_muallif(requests):
-#     content = {
-#         "tirik_mualliflar":Mualllif.objects.filter(tirik=True)
-#     }
-#     return render(requests,'muallif.html',content)
-# ##############
-#     path ('tirik_muallif/', tirik_muallif),
+def talaba_tahrir(request,son):
+    if request.method == 'POST':
+        Talaba.objects.filter(id=son).update(
+            kurs=request.POST.get('kurs'),
+            kitob_soni=request.POST.get('kitob_soni'))
+        return redirect('/talabalar/')
+
+    content = {
+        "talaba":Talaba.objects.get(id=son)
+    }
+    return render(request,'talaba_tahrir.html', content)
 
 
-# def sahifa_top3(requests):
-#     content ={
-#         "sahifa_top3":Kitob.objects.all().order_by('-sahifa')[0:3]
-#     }
-#     return render(requests,'kitob.html',content)
-# ###########
-#     path ('sahifa_top3/', sahifa_top3),
+def kitob_edit(request,son):
+    if request.method == 'POST':
+        Kitob.objects.filter(id=son).update(
+            nom=request.POST.get('nom'),
+            sahifa=request.POST.get('sahifa'),
+            janr=request.POST.get('janr'),
+            muallif=Mualllif.objects.get(id=request.POST.get('janr')))
+        return redirect('/kitoblar/')
+    k = Kitob.objects.get(id=son)
+    content = {
+        "kitoblar":k,
+        "mualliflar":Mualllif.objects.exclude(id=k.muallif.id)
+    }
+    return render(request,'kitob_edit.html', content)
 
 
-# def kitob_order_top3(requests):
-#     content = {
-#         "kitob_top3":Mualllif.objects.all().order_by('-kitob_soni')[0:3]
-#     }
-#     return render(requests,"muallif.html",content)
-# ##########
-#     path ('kitob_order_top3/', kitob_order_top3),
+def admin_edit(request,son):
+    if request.method == 'POST':
+        Admin.objects.filter(id=son).update(
+            ism=request.POST.get('ism'),
+            kitob_soni=request.POST.get('kitob_soni'))
+        return redirect('/talabalar/')
+
+    content = {
+        "talaba":Talaba.objects.get(id=son)
+    }
+    return render(request,'talaba_tahrir.html', content)
 
 
 
+
+
+def records(request):
+    if request.method == 'POST':
+        forma = RecordForms(request.POST)
+        if forma.is_valid():
+            forma.save()
+        return redirect('/recordlar/')
+    ism = request.GET.get('qidiruv')
+    if ism == "" or ism is None:
+        content = {
+            "record": Record.objects.all(),
+            "talabalar": Talaba.objects.all(),
+            "kitoblar": Kitob.objects.all(),
+            "adminlar": Admin.objects.all(),
+            "forma" :RecordForms()
+        }
+    else:
+        content = {
+            "record": Record.objects.filter(talaba__ism__icontains=ism),
+            "talabalar": Talaba.objects.all(),
+            "kitoblar": Kitob.objects.all(),
+            "adminlar": Admin.objects.all(),
+            "forma": RecordForms()
+        }
+
+    return render(request,'records.html',content)
 
 
 
