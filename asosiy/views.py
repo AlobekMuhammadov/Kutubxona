@@ -1,5 +1,8 @@
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views import View
+
 from .models import *
 from .forms import *
 
@@ -211,30 +214,46 @@ def admin_edit(request,son):
 
 
 def records(request):
-    if request.method == 'POST':
-        forma = RecordForms(request.POST)
-        if forma.is_valid():
-            forma.save()
-        return redirect('/recordlar/')
-    ism = request.GET.get('qidiruv')
-    if ism == "" or ism is None:
-        content = {
-            "record": Record.objects.all(),
-            "talabalar": Talaba.objects.all(),
-            "kitoblar": Kitob.objects.all(),
-            "adminlar": Admin.objects.all(),
-            "forma" :RecordForms()
-        }
-    else:
-        content = {
-            "record": Record.objects.filter(talaba__ism__icontains=ism),
-            "talabalar": Talaba.objects.all(),
-            "kitoblar": Kitob.objects.all(),
-            "adminlar": Admin.objects.all(),
-            "forma": RecordForms()
-        }
+    if request.user.authenticated:
+        if request.method == 'POST':
+            forma = RecordForms(request.POST)
+            if forma.is_valid():
+                forma.save()
+            return redirect('/recordlar/')
+        ism = request.GET.get('qidiruv')
+        if ism == "" or ism is None:
+            content = {
+                "record": Record.objects.all(),
+                "talabalar": Talaba.objects.all(),
+                "kitoblar": Kitob.objects.all(),
+                "adminlar": Admin.objects.all(),
+                "forma" :RecordForms()
+            }
+        else:
+            content = {
+                "record": Record.objects.filter(talaba__ism__icontains=ism),
+                "talabalar": Talaba.objects.all(),
+                "kitoblar": Kitob.objects.all(),
+                "adminlar": Admin.objects.all(),
+                "forma": RecordForms()
+            }
 
-    return render(request,'records.html',content)
+        return render(request,'records.html',content)
+    return redirect('login')
+
+class LoginView(View):
+    def get(self,request):
+        return render(request,'login.html')
+
+    def post(self,request):
+        user = authenticate(
+            username = request.POST.get('username'),
+            password = request.POST.get('password'),
+        )
+        if user is None:
+            return redirect('login')
+        login(request,user)
+        return redirect('/mualliflar/')
 
 
 

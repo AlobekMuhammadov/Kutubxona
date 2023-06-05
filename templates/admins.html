@@ -14,12 +14,7 @@
   <h3>{{admin.id}}.{{admin.ism}}({{admin.ish_vaqt}})</h3>
   {% endfor %}
   <form method="post">{% csrf_token %}
-    <input type="text" name="ism">
-    <select name="i_v">
-      <option value="8:00|14:00">8:00|14:00</option>
-      <option value="14:00|22:00">14:00|22:00</option>
-    </select>
-    <button type="submit">jonat</button>
+    {{forma}}
   </form>
 
 </body>
