@@ -5,6 +5,7 @@ from asosiy.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LoginView.as_view(),name='login'),
+    path('register/', RegisterView.as_view(),name='register'),
     path('talabalar/', talabalar),
     path('talaba_tahrir/<int:son>/', talaba_tahrir),
     path('kitob_edit/<int:son>/', kitob_edit),

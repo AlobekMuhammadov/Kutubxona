@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Login Page</title>
+	<title>Registration Page</title>
 	<style>
 		body {
 			background-color: #f2f2f2;
@@ -69,14 +69,16 @@
   </div>
   {% endif %}
 	<div class="container">
-		<h1>Login Page</h1>
+		<h1>Registration Page</h1>
 		<form method="post" > {% csrf_token %}
 			<label for="username">Username:</label>
 			<input type="text" name="username" id="username" placeholder="Username yoz ...">
 			<label for="password">Password:</label>
 			<input type="password" name="password" id="password" placeholder="password yoz ...">
-			<button type="submit">Login</button>
-			<a href="{% url 'register' %}"><button type="Button">Register</button></a>
+			<label for="password2">Passwordni tasdiqlash:</label>
+			<input type="password" name="password2" id="password2" placeholder="passwordni tasdiqla ...">
+			<button type="submit">Register</button>
+			<a href="{% url 'login' %}"><button type="Button">Login</button></a>
 		</form>
 	</div>
 </body>

@@ -1,7 +1,9 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
+from pyexpat.errors import messages
 
 from .models import *
 from .forms import *
@@ -254,6 +256,23 @@ class LoginView(View):
             return redirect('login')
         login(request,user)
         return redirect('/mualliflar/')
+
+
+class RegisterView(View):
+    def get(self,request):
+        return render(request,'register.html')
+
+
+    def post(self,request):
+        if request.POST.get('password') == request.POST.get('password2'):
+            User.objects.create_user(
+                username=request.POST.get('username'),
+                password = request.POST.get('password')
+            )
+            return redirect('login')
+        # messages.error(request, 'login yoki parolda hatolik bor')
+        return redirect('register')
+
 
 
 
